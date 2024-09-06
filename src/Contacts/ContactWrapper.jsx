@@ -15,7 +15,10 @@ const ContactWrapper = () => {
         onContactSelect={handleContactSelect}
         selectedContact={selectedContact}
       />
-      <SelectedContact contact={selectedContact} />
+      <SelectedContact
+        contact={selectedContact}
+        handleContactSelect={handleContactSelect}
+      />
     </div>
   );
 };

@@ -7,8 +7,29 @@ import { FaPersonCane } from "react-icons/fa6";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 
-const SelectedContact = ({ contact }) => {
+const SelectedContact = ({ contact, handleContactSelect }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7158/api/customer/${contact.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (response.ok) {
+        console.log("Contact deleted successfully");
+        setShowModal(false);
+        handleContactSelect(null);
+      } else {
+        console.error("Failed to delete contact");
+      }
+    } catch (error) {
+      console.error("Error while deleting contact", error);
+    }
+  };
 
   if (!contact) {
     return (
@@ -42,7 +63,10 @@ const SelectedContact = ({ contact }) => {
                   <FaPenAlt />
                   <p className="ml-2">Update contact</p>
                 </li>
-                <li className="flex cursor-pointer items-center rounded-lg p-2 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white">
+                <li
+                  className="flex cursor-pointer items-center rounded-lg p-2 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
+                  onClick={() => setShowModal(true)} // Open modal on delete
+                >
                   <RiDeleteBin4Fill className="" />
                   <p className="ml-2">Delete contact</p>
                 </li>
@@ -98,6 +122,30 @@ const SelectedContact = ({ contact }) => {
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-1/3 rounded-lg bg-white p-6">
+            <h2 className="mb-4 text-xl font-semibold">
+              Are you sure you want to delete this contact?
+            </h2>
+            <div className="flex justify-end">
+              <button
+                className="mr-4 rounded-lg border border-white bg-gray-300 px-4 py-2 transition-all duration-200 hover:border-black"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-lg border border-white bg-red-500 px-4 py-2 text-white transition-all duration-200 hover:border-black"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
