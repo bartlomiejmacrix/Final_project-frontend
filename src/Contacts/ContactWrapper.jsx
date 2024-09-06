@@ -11,7 +11,10 @@ const ContactWrapper = () => {
 
   return (
     <div className="h-1000px w-860px flex">
-      <ContactList onContactSelect={handleContactSelect} />
+      <ContactList
+        onContactSelect={handleContactSelect}
+        selectedContact={selectedContact}
+      />
       <SelectedContact contact={selectedContact} />
     </div>
   );

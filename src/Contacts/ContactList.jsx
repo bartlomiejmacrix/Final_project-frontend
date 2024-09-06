@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Search from "./Search";
 import Contact from "./Contact";
 
-const ContactList = ({ onContactSelect }) => {
+const ContactList = ({ onContactSelect, selectedContact }) => {
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const ContactList = ({ onContactSelect }) => {
             contactInfo={contact}
             key={index}
             onClick={() => onContactSelect(contact)}
+            isSelected={contact === selectedContact}
           />
         ))}
       </div>

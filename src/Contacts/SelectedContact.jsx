@@ -38,7 +38,8 @@ const SelectedContact = ({ contact }) => {
             <LuMapPin size={40} className="text-blue-500" />
             <div className="ml-4">
               <p>
-                {contact.streetName} {contact.houseNumber}{" "}
+                {contact.streetName} {contact.houseNumber}
+                {"/"}
                 {contact.apartmentNumber}
               </p>
               <p>{contact.postalCode}</p>
@@ -51,7 +52,7 @@ const SelectedContact = ({ contact }) => {
             <LiaBirthdayCakeSolid size={50} className="text-blue-500" />
             <div className="ml-4">
               <p className="text-lg">
-                {format(new Date(contact.dateOfBirth), "yyyy-MM-dd")}
+                {format(new Date(contact.dateOfBirth), "d MMMM yyyy")}
               </p>
               <p className="ml-1 text-sm text-gray-500">Date of birth</p>
             </div>

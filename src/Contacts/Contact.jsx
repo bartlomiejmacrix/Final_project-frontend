@@ -1,10 +1,18 @@
 import React from "react";
 import { IoIosPerson } from "react-icons/io";
 
-const Contact = ({ contactInfo, onClick }) => {
+const Contact = ({ contactInfo, onClick, isSelected }) => {
+  var contactStyles;
+  if (isSelected) {
+    contactStyles =
+      "w-full cursor-pointer rounded-lg p-2 bg-blue-100 bg-blue-100";
+  } else {
+    contactStyles =
+      "w-full cursor-pointer rounded-lg p-2 transition-all duration-200 hover:bg-blue-100";
+  }
   return (
     <div
-      className="w-full cursor-pointer rounded-lg p-2 transition-all duration-200 hover:bg-blue-100"
+      className={`my-1 w-full cursor-pointer rounded-lg p-2 ${isSelected ? "bg-blue-300" : "transition-all duration-200 hover:bg-blue-100"}`}
       onClick={onClick}
     >
       <div className="flex h-[70px] items-center">
