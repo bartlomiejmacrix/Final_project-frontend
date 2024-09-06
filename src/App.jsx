@@ -1,9 +1,12 @@
 import "./App.css";
+import Navbar from "./Navbar/Navbar";
+import ContactWrapper from "./Contacts/ContactWrapper";
 
 function App() {
   return (
     <>
-      <div>Hello World</div>
+      <Navbar />
+      <ContactWrapper />
     </>
   );
 }

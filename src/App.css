@@ -1,0 +1,22 @@
+* {
+  font-family: dm-sans, sans-serif;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  padding-top: 1rem;
+  height: 860px;
+  width: 1280px;
+  margin: 0 auto;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
