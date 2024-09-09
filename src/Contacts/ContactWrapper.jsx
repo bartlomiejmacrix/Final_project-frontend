@@ -12,12 +12,12 @@ const ContactWrapper = () => {
   return (
     <div className="h-1000px w-860px flex">
       <ContactList
-        onContactSelect={handleContactSelect}
         selectedContact={selectedContact}
+        onContactSelect={handleContactSelect}
       />
       <SelectedContact
-        contact={selectedContact}
-        handleContactSelect={handleContactSelect}
+        selectedContact={selectedContact}
+        onContactSelect={handleContactSelect}
       />
     </div>
   );

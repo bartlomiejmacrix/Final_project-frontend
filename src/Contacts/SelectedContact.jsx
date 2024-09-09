@@ -6,15 +6,16 @@ import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import { FaPersonCane } from "react-icons/fa6";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
+import ContactForm from "../ContactForm/ContactForm";
 
-const SelectedContact = ({ contact, handleContactSelect }) => {
+const SelectedContact = ({ selectedContact, onContactSelect }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7158/api/customer/${contact.id}`,
+        `https://localhost:7158/api/customer/${selectedContact.id}`,
         {
           method: "DELETE",
         },
@@ -22,7 +23,7 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
       if (response.ok) {
         console.log("Contact deleted successfully");
         setShowModal(false);
-        handleContactSelect(null);
+        onContactSelect(null);
       } else {
         console.error("Failed to delete contact");
       }
@@ -31,7 +32,15 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
     }
   };
 
-  if (!contact) {
+  if (selectedContact === "add") {
+    return (
+      <div className="h-[760px] w-2/3">
+        <ContactForm onContactSelect={onContactSelect} />
+      </div>
+    );
+  }
+
+  if (!selectedContact) {
     return (
       <div className="h-[760px] w-2/3">
         <p className="mt-16 text-center text-2xl">
@@ -65,7 +74,7 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
                 </li>
                 <li
                   className="flex cursor-pointer items-center rounded-lg p-2 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
-                  onClick={() => setShowModal(true)} // Open modal on delete
+                  onClick={() => setShowModal(true)}
                 >
                   <RiDeleteBin4Fill className="" />
                   <p className="ml-2">Delete contact</p>
@@ -76,17 +85,17 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
         </div>
 
         <h2 className="text-2xl font-bold">
-          {contact.firstName} {contact.lastName}
+          {selectedContact.firstName} {selectedContact.lastName}
         </h2>
-        <p className="text-gray-500">{contact.town}</p>
+        <p className="text-gray-500">{selectedContact.town}</p>
       </div>
 
       <div className="mx-24 mt-20 flex items-center">
-        <div className="h-[210px] w-[180px]">
+        <div className="h-[300px] w-[200px]">
           <div className="flex items-center">
             <BsFillTelephoneFill size={30} className="text-blue-500" />
             <div className="ml-4">
-              <p>{contact.phoneNumber}</p>
+              <p>{selectedContact.phoneNumber}</p>
               <p className="text-sm text-gray-500">Phone number</p>
             </div>
           </div>
@@ -94,21 +103,21 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
             <LuMapPin size={40} className="text-blue-500" />
             <div className="ml-4">
               <p>
-                {contact.streetName} {contact.houseNumber}
+                {selectedContact.streetName} {selectedContact.houseNumber}
                 {"/"}
-                {contact.apartmentNumber}
+                {selectedContact.apartmentNumber}
               </p>
-              <p>{contact.postalCode}</p>
+              <p>{selectedContact.postalCode}</p>
               <p className="text-sm text-gray-500">Address</p>
             </div>
           </div>
         </div>
-        <div className="ml-60 h-[210px]">
+        <div className="ml-48 h-[300px] w-[220px]">
           <div className="flex items-center">
             <LiaBirthdayCakeSolid size={50} className="text-blue-500" />
             <div className="ml-4">
               <p className="text-lg">
-                {format(new Date(contact.dateOfBirth), "d MMMM yyyy")}
+                {format(new Date(selectedContact.dateOfBirth), "d MMMM yyyy")}
               </p>
               <p className="ml-1 text-sm text-gray-500">Date of birth</p>
             </div>
@@ -116,7 +125,7 @@ const SelectedContact = ({ contact, handleContactSelect }) => {
           <div className="mt-24 flex">
             <FaPersonCane size={40} className="text-blue-500" />
             <div className="ml-4">
-              <p>{contact.age}</p>
+              <p>{selectedContact.age}</p>
               <p className="text-sm text-gray-500">Age</p>
             </div>
           </div>
