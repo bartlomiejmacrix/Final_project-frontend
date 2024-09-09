@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ContactActionTypes } from "../Helpers/ContactActionTypes";
+import format from "date-fns/format";
 
 const defaultValues = {
   firstName: "",
@@ -12,30 +14,32 @@ const defaultValues = {
   dateOfBirth: "",
 };
 
-const ContactForm = ({ contact, onContactSelect }) => {
-  const [formData, setFormData] = useState({
-    ...defaultValues,
-  });
-
-  if (contact) {
-    var defaultContactValues = {
-      firstName: contact.firstName || "",
-      lastName: contact.lastName || "",
-      streetName: contact.streetName || "",
-      houseNumber: contact.houseNumber || "",
-      apartmentNumber: contact.apartmentNumber || "",
-      postalCode: contact.postalCode || "",
-      town: contact.town || "",
-      phoneNumber: contact.phoneNumber || "",
-      dateOfBirth: contact.dateOfBirth || "",
-    };
-  }
+const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
+  const [formData, setFormData] = useState({ ...defaultValues });
 
   useEffect(() => {
     if (contact) {
-      setFormData({ ...defaultContactValues });
+      const defaultContactValues = {
+        firstName: contact.firstName || "",
+        lastName: contact.lastName || "",
+        streetName: contact.streetName || "",
+        houseNumber: contact.houseNumber || "",
+        apartmentNumber: contact.apartmentNumber || "",
+        postalCode: contact.postalCode || "",
+        town: contact.town || "",
+        phoneNumber: contact.phoneNumber || "",
+        dateOfBirth: contact.dateOfBirth ? formatDate(contact.dateOfBirth) : "",
+      };
+      setFormData(defaultContactValues);
+    } else {
+      setFormData({ ...defaultValues });
     }
   }, [contact]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
+  };
 
   const calculateAge = (dateOfBirth) => {
     const birthDate = new Date(dateOfBirth);
@@ -60,7 +64,6 @@ const ContactForm = ({ contact, onContactSelect }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       const url = contact
         ? `https://localhost:7158/api/customer/${contact.id}`
@@ -77,10 +80,10 @@ const ContactForm = ({ contact, onContactSelect }) => {
       });
 
       if (response.ok) {
-        const savedContact = await response.json();
-        onContactSelect(savedContact);
+        onContactSelect(null);
+        handleActionType(ContactActionTypes.NONE);
       } else {
-        console.error("Error saving contact");
+        console.error("Error saving contact:", response.statusText);
       }
     } catch (error) {
       console.error("There was an error saving the contact:", error);
@@ -89,10 +92,12 @@ const ContactForm = ({ contact, onContactSelect }) => {
 
   const handleCancel = () => {
     if (contact) {
-      setFormData({ ...defaultContactValues });
+      setFormData({ ...defaultValues });
     } else {
       setFormData({ ...defaultValues });
     }
+
+    handleActionType(ContactActionTypes.NONE);
   };
 
   return (
@@ -100,7 +105,7 @@ const ContactForm = ({ contact, onContactSelect }) => {
       <h2 className="mb-4 border-b border-b-blue-500 pb-6 text-2xl font-bold">
         {contact ? "Edit Contact" : "New Contact"}
       </h2>
-      <form onSubmit={(e) => handleSave(e)}>
+      <form onSubmit={handleSave}>
         <div className="mb-4 grid grid-cols-2 gap-4">
           <div>
             <label>First Name</label>
@@ -271,7 +276,6 @@ const ContactForm = ({ contact, onContactSelect }) => {
               onInput={(e) => {
                 const selectedDate = new Date(e.target.value);
                 const today = new Date();
-
                 if (selectedDate >= today) {
                   e.target.setCustomValidity(
                     "Date of birth must be in the past.",

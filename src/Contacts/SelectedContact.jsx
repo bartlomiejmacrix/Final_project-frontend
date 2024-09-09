@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import format from "date-fns/format";
 import { BsFillTelephoneFill, BsThreeDotsVertical } from "react-icons/bs";
 import { LuMapPin } from "react-icons/lu";
@@ -7,10 +7,20 @@ import { FaPersonCane } from "react-icons/fa6";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import ContactForm from "../ContactForm/ContactForm";
+import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 
-const SelectedContact = ({ selectedContact, onContactSelect }) => {
+const SelectedContact = ({
+  selectedContact,
+  onContactSelect,
+  handleActionType,
+  actionType,
+}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    setShowOptions(false);
+  }, [selectedContact]);
 
   const handleDelete = async () => {
     try {
@@ -32,10 +42,25 @@ const SelectedContact = ({ selectedContact, onContactSelect }) => {
     }
   };
 
-  if (selectedContact === "add") {
+  if (actionType === ContactActionTypes.ADD) {
     return (
       <div className="h-[760px] w-2/3">
-        <ContactForm onContactSelect={onContactSelect} />
+        <ContactForm
+          onContactSelect={onContactSelect}
+          handleActionType={handleActionType}
+        />
+      </div>
+    );
+  }
+
+  if (actionType === ContactActionTypes.UPDATE) {
+    return (
+      <div className="h-[760px] w-2/3">
+        <ContactForm
+          onContactSelect={onContactSelect}
+          contact={selectedContact}
+          handleActionType={handleActionType}
+        />
       </div>
     );
   }
@@ -57,18 +82,21 @@ const SelectedContact = ({ selectedContact, onContactSelect }) => {
 
         <div
           className="absolute right-6 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white"
-          onMouseEnter={() => setShowOptions(true)}
+          onClick={() => setShowOptions(true)}
           onMouseLeave={() => setShowOptions(false)}
         >
           <BsThreeDotsVertical size={25} />
           {showOptions && (
             <div
               className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-md"
-              onMouseEnter={() => setShowOptions(true)}
+              onClick={() => setShowOptions(true)}
               onMouseLeave={() => setShowOptions(false)}
             >
               <ul className="text-black">
-                <li className="flex cursor-pointer items-center rounded-lg p-2 transition-all duration-200 hover:bg-blue-500 hover:text-white">
+                <li
+                  className="flex cursor-pointer items-center rounded-lg p-2 transition-all duration-200 hover:bg-blue-500 hover:text-white"
+                  onClick={() => handleActionType(ContactActionTypes.UPDATE)}
+                >
                   <FaPenAlt />
                   <p className="ml-2">Update contact</p>
                 </li>
@@ -76,7 +104,7 @@ const SelectedContact = ({ selectedContact, onContactSelect }) => {
                   className="flex cursor-pointer items-center rounded-lg p-2 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
                   onClick={() => setShowModal(true)}
                 >
-                  <RiDeleteBin4Fill className="" />
+                  <RiDeleteBin4Fill />
                   <p className="ml-2">Delete contact</p>
                 </li>
               </ul>
@@ -104,8 +132,9 @@ const SelectedContact = ({ selectedContact, onContactSelect }) => {
             <div className="ml-4">
               <p>
                 {selectedContact.streetName} {selectedContact.houseNumber}
-                {"/"}
-                {selectedContact.apartmentNumber}
+                {selectedContact.apartmentNumber
+                  ? "/" + selectedContact.apartmentNumber
+                  : ""}
               </p>
               <p>{selectedContact.postalCode}</p>
               <p className="text-sm text-gray-500">Address</p>
