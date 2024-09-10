@@ -6,15 +6,17 @@ import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import { FaPersonCane } from "react-icons/fa6";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
-import ContactForm from "../ContactForm/ContactForm";
+import ContactForm from "./ContactForm.jsx";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import { IoIosPerson } from "react-icons/io";
+import { PiSmileySadLight } from "react-icons/pi";
 
 const SelectedContact = ({
   selectedContact,
   onContactSelect,
   handleActionType,
   actionType,
+  isConnectionError,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -70,7 +72,13 @@ const SelectedContact = ({
     return (
       <div className="h-[760px] w-2/3">
         <p className="mt-16 text-center text-2xl">
-          Select a contact to see details
+          {isConnectionError ? (
+            <div className="flex flex-col items-center">
+              Connection error <PiSmileySadLight size={50} />
+            </div>
+          ) : (
+            "Select a contact to see details"
+          )}
         </p>
       </div>
     );

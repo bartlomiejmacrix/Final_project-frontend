@@ -6,6 +6,7 @@ import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 const ContactWrapper = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [actionType, setActionType] = useState(ContactActionTypes.NONE);
+  const [isConnectionError, setIsConnectionError] = useState(false);
 
   const handleActionType = (action) => {
     setActionType(action);
@@ -21,12 +22,14 @@ const ContactWrapper = () => {
         selectedContact={selectedContact}
         onContactSelect={handleContactSelect}
         handleActionType={handleActionType}
+        setIsConnectionError={setIsConnectionError}
       />
       <SelectedContact
         selectedContact={selectedContact}
         onContactSelect={handleContactSelect}
         handleActionType={handleActionType}
         actionType={actionType}
+        isConnectionError={isConnectionError}
       />
     </div>
   );
