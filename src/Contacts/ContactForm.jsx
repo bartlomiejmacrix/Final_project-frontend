@@ -18,7 +18,7 @@ const defaultValues = {
 const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
   var defaultImageText = "Drop or click to select contact image file";
   const [formData, setFormData] = useState({ ...defaultValues });
-  const [fileName, setFileName] = useState(contact?.image ?? defaultImageText);
+  const [fileName, setFileName] = useState(defaultImageText);
   const [originalFormData, setOriginalFormData] = useState({
     ...defaultValues,
   });
@@ -40,7 +40,11 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
       };
       setFormData(defaultContactValues);
       setOriginalFormData(defaultContactValues);
-      setFileName(defaultContactValues.image ?? "Update current picture");
+      setFileName(
+        defaultContactValues.image
+          ? "Update current picture"
+          : defaultImageText,
+      );
     } else {
       setFormData({ ...defaultValues });
       setOriginalFormData({ ...defaultValues });
@@ -142,23 +146,26 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
   };
 
   const isFormValid = () => {
+    const validateText = (text, minLength, maxLength) =>
+      text.length >= minLength && text.length <= maxLength;
+
+    const validatePattern = (value, pattern) => new RegExp(pattern).test(value);
+
     return (
-      formData.firstName &&
-      formData.lastName &&
-      formData.streetName &&
-      formData.houseNumber &&
-      formData.postalCode &&
-      formData.town &&
-      formData.phoneNumber &&
-      formData.dateOfBirth
+      validateText(formData.firstName, 2, 50) &&
+      validateText(formData.lastName, 2, 50) &&
+      validateText(formData.streetName, 2, 50) &&
+      validateText(formData.houseNumber, 1, 10) &&
+      validateText(formData.apartmentNumber, 0, 10) &&
+      validatePattern(formData.postalCode, "^\\d{2}-\\d{3}$") &&
+      validateText(formData.town, 2, 50) &&
+      validatePattern(formData.phoneNumber, "^[0-9]{9}$") &&
+      formData.dateOfBirth &&
+      new Date(formData.dateOfBirth) < new Date()
     );
   };
 
-  const isSaveDisabled =
-    !isFormValid() ||
-    (!hasChanges &&
-      contact &&
-      Object.keys(formData).some((key) => formData[key].length === 1));
+  const isSaveDisabled = !isFormValid() || (contact && !hasChanges);
 
   return (
     <div className="mx-auto mt-16 w-1/2 rounded-lg p-4">
@@ -169,9 +176,12 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
         <div className="relative my-4 flex h-16 w-full rounded-lg border p-2">
           <span id="fileName" className="z-10 block w-3/4 truncate">
             {contact
-              ? "Update current picture"
+              ? fileName === defaultImageText
+                ? "Update current picture"
+                : fileName
               : fileName || "Drop contact image or click to select"}
           </span>
+
           <AiOutlineCloudUpload
             size={40}
             className="absolute right-4 top-2 z-10 text-blue-500"
@@ -393,8 +403,9 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
           >
             Cancel
           </button>
+
           <button
-            className={`cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white ${isSaveDisabled && "cursor-not-allowed"}`}
+            className={`rounded-lg bg-blue-500 px-4 py-2 text-white ${isSaveDisabled ? "cursor-not-allowed" : "cursor-pointer"}`}
             type="submit"
             disabled={isSaveDisabled}
           >

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import format from "date-fns/format";
-import { BsFillTelephoneFill, BsThreeDotsVertical } from "react-icons/bs";
-import { LuMapPin } from "react-icons/lu";
-import { LiaBirthdayCakeSolid } from "react-icons/lia";
-import { FaPersonCane } from "react-icons/fa6";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import ContactForm from "./ContactForm.jsx";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import { IoIosPerson } from "react-icons/io";
 import { PiSmileySadLight } from "react-icons/pi";
+import ContactData from "./ContactData.jsx";
+import ContactDataTwo from "./ContactDataTwo.jsx";
 
 const SelectedContact = ({
   selectedContact,
@@ -100,7 +98,7 @@ const SelectedContact = ({
         </div>
 
         <div
-          className="absolute right-6 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white"
+          className="absolute right-4 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white"
           onClick={() => setShowOptions(true)}
           onMouseLeave={() => setShowOptions(false)}
         >
@@ -138,46 +136,8 @@ const SelectedContact = ({
       </div>
 
       <div className="mx-24 mt-20 flex items-center">
-        <div className="h-[300px] w-[200px]">
-          <div className="flex items-center">
-            <BsFillTelephoneFill size={30} className="text-blue-500" />
-            <div className="ml-4">
-              <p>{selectedContact.phoneNumber}</p>
-              <p className="text-sm text-gray-500">Phone number</p>
-            </div>
-          </div>
-          <div className="mt-24 flex items-center">
-            <LuMapPin size={40} className="text-blue-500" />
-            <div className="ml-4">
-              <p>
-                {selectedContact.streetName} {selectedContact.houseNumber}
-                {selectedContact.apartmentNumber
-                  ? "/" + selectedContact.apartmentNumber
-                  : ""}
-              </p>
-              <p>{selectedContact.postalCode}</p>
-              <p className="text-sm text-gray-500">Address</p>
-            </div>
-          </div>
-        </div>
-        <div className="ml-48 h-[300px] w-[220px]">
-          <div className="flex items-center">
-            <LiaBirthdayCakeSolid size={50} className="text-blue-500" />
-            <div className="ml-4">
-              <p className="text-lg">
-                {format(new Date(selectedContact.dateOfBirth), "d MMMM yyyy")}
-              </p>
-              <p className="ml-1 text-sm text-gray-500">Date of birth</p>
-            </div>
-          </div>
-          <div className="mt-24 flex">
-            <FaPersonCane size={40} className="text-blue-500" />
-            <div className="ml-4">
-              <p>{selectedContact.age}</p>
-              <p className="text-sm text-gray-500">Age</p>
-            </div>
-          </div>
-        </div>
+        <ContactData selectedContact={selectedContact} />
+        <ContactDataTwo selectedContact={selectedContact} />
       </div>
 
       {showModal && (
