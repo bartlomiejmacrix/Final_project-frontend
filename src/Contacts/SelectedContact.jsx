@@ -8,6 +8,7 @@ import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import ContactForm from "../ContactForm/ContactForm";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
+import { IoIosPerson } from "react-icons/io";
 
 const SelectedContact = ({
   selectedContact,
@@ -78,7 +79,17 @@ const SelectedContact = ({
   return (
     <div className="relative h-[760px] w-2/3 p-4">
       <div className="flex flex-col items-center">
-        <div>[Placeholder for image]</div>
+        <div>
+          {selectedContact && selectedContact.image ? (
+            <img
+              src={`data:image/jpeg;base64,${selectedContact.image}`}
+              alt="Contact image"
+              className="h-[120px] w-[120px] rounded-full object-cover ring-2 ring-blue-500"
+            />
+          ) : (
+            <IoIosPerson className="h-[120px] w-[120px] rounded-full p-1 ring-2 ring-blue-500" />
+          )}
+        </div>
 
         <div
           className="absolute right-6 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white"
@@ -112,7 +123,7 @@ const SelectedContact = ({
           )}
         </div>
 
-        <h2 className="text-2xl font-bold">
+        <h2 className="mt-2 text-2xl font-bold">
           {selectedContact.firstName} {selectedContact.lastName}
         </h2>
         <p className="text-gray-500">{selectedContact.town}</p>

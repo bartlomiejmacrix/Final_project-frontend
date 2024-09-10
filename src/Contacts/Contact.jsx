@@ -16,7 +16,15 @@ const Contact = ({ contactInfo, onClick, isSelected }) => {
       onClick={onClick}
     >
       <div className="flex h-[70px] items-center">
-        <IoIosPerson size={50} className="ring-blue-500-2" />
+        {contactInfo.image ? (
+          <img
+            src={`data:image/jpeg;base64,${contactInfo.image}`}
+            alt="Contact image"
+            className="h-[60px] w-[60px] rounded-full object-cover"
+          />
+        ) : (
+          <IoIosPerson size={50} />
+        )}
         <div className="flex flex-col justify-center pl-4 text-sm">
           <p className="font-bold">
             {contactInfo.firstName} {contactInfo.lastName}

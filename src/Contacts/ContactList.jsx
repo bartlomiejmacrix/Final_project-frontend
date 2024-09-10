@@ -103,8 +103,8 @@ const ContactList = ({
           className={`ml-1 flex h-[80px] cursor-pointer items-center rounded-lg p-2 transition-all duration-200 ${selectedContact === "add" ? "bg-green-200" : "hover:bg-green-100"} `}
           onClick={() => handleAddNewContact()}
         >
-          <IoPersonAddSharp size={40} className="ring-blue-500-2" />
-          <div className="flex flex-col justify-center pl-4 text-sm">
+          <IoPersonAddSharp size={40} />
+          <div className="flex flex-col justify-center pl-6 text-sm">
             <p className="font-bold">Add new contact</p>
           </div>
         </div>

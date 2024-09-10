@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes";
-import format from "date-fns/format";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 const defaultValues = {
   firstName: "",
@@ -12,14 +12,21 @@ const defaultValues = {
   town: "",
   phoneNumber: "",
   dateOfBirth: "",
+  image: null,
 };
 
 const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
+  var defaultImageText = "Drop or click to select contact image file";
   const [formData, setFormData] = useState({ ...defaultValues });
+  const [fileName, setFileName] = useState(contact?.image ?? defaultImageText);
+  const [originalFormData, setOriginalFormData] = useState({
+    ...defaultValues,
+  });
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (contact) {
-      const defaultContactValues = {
+      var defaultContactValues = {
         firstName: contact.firstName || "",
         lastName: contact.lastName || "",
         streetName: contact.streetName || "",
@@ -29,12 +36,24 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
         town: contact.town || "",
         phoneNumber: contact.phoneNumber || "",
         dateOfBirth: contact.dateOfBirth ? formatDate(contact.dateOfBirth) : "",
+        image: contact.image || null,
       };
       setFormData(defaultContactValues);
+      setOriginalFormData(defaultContactValues);
+      setFileName(defaultContactValues.image ?? "Update current picture");
     } else {
       setFormData({ ...defaultValues });
+      setOriginalFormData({ ...defaultValues });
+      setFileName(defaultImageText);
     }
   }, [contact]);
+
+  useEffect(() => {
+    const hasAnyChanges = Object.keys(formData).some(
+      (key) => formData[key] !== originalFormData[key],
+    );
+    setHasChanges(hasAnyChanges);
+  }, [formData]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -64,7 +83,23 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
+    const convertImageToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = (error) => reject(error);
+      });
+    };
+
     try {
+      if (formData.image && formData.image instanceof File) {
+        formData.image = await convertImageToBase64(formData.image);
+      } else if (contact && contact.image && !formData.image) {
+        formData.image = contact.image;
+      }
+
       const url = contact
         ? `https://localhost:7158/api/customer/${contact.id}`
         : "https://localhost:7158/api/customer";
@@ -92,13 +127,38 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
 
   const handleCancel = () => {
     if (contact) {
-      setFormData({ ...defaultValues });
+      setFormData({ ...originalFormData });
+      setFileName(
+        contact.image
+          ? "Update current picture"
+          : "Drop or click to select contact image file",
+      );
     } else {
       setFormData({ ...defaultValues });
+      setFileName("Drop or click to select contact image file");
     }
 
-    handleActionType(ContactActionTypes.NONE);
+    setHasChanges(false);
   };
+
+  const isFormValid = () => {
+    return (
+      formData.firstName &&
+      formData.lastName &&
+      formData.streetName &&
+      formData.houseNumber &&
+      formData.postalCode &&
+      formData.town &&
+      formData.phoneNumber &&
+      formData.dateOfBirth
+    );
+  };
+
+  const isSaveDisabled =
+    !isFormValid() ||
+    (!hasChanges &&
+      contact &&
+      Object.keys(formData).some((key) => formData[key].length === 1));
 
   return (
     <div className="mx-auto mt-16 w-1/2 rounded-lg p-4">
@@ -106,6 +166,31 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
         {contact ? "Edit Contact" : "New Contact"}
       </h2>
       <form onSubmit={handleSave}>
+        <div className="relative my-4 flex h-16 w-full rounded-lg border p-2">
+          <span id="fileName" className="z-10 block w-3/4 truncate">
+            {contact
+              ? "Update current picture"
+              : fileName || "Drop contact image or click to select"}
+          </span>
+          <AiOutlineCloudUpload
+            size={40}
+            className="absolute right-4 top-2 z-10 text-blue-500"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            className="absolute z-20 h-full w-full opacity-0"
+            onChange={(e) => {
+              const selectedFile = e.target.files[0];
+              setFileName(selectedFile?.name);
+              setFormData({
+                ...formData,
+                image: selectedFile,
+              });
+            }}
+          />
+        </div>
+
         <div className="mb-4 grid grid-cols-2 gap-4">
           <div>
             <label>First Name</label>
@@ -302,14 +387,16 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
 
         <div className="flex justify-between">
           <button
-            className="rounded-lg bg-gray-500 px-4 py-2 text-white"
+            className={`rounded-lg bg-gray-500 px-4 py-2 text-white ${!hasChanges && "cursor-not-allowed"}`}
             onClick={handleCancel}
+            disabled={!hasChanges}
           >
             Cancel
           </button>
           <button
-            className="rounded-lg bg-blue-500 px-4 py-2 text-white"
+            className={`cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white ${isSaveDisabled && "cursor-not-allowed"}`}
             type="submit"
+            disabled={isSaveDisabled}
           >
             Save
           </button>
