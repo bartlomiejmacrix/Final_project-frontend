@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 
-const Search = ({ onSearch }) => {
+const Search = ({ onSearch, isInteractionDisabled }) => {
   const [searchIconColor, setSearchIconColor] = useState("text-gray-500");
   const [query, setQuery] = useState("");
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -29,19 +29,23 @@ const Search = ({ onSearch }) => {
   };
 
   return (
-    <div className="relative flex items-center pb-4">
+    <div
+      className={`relative flex items-center pb-4 ${isInteractionDisabled && "cursor-not-allowed"}`}
+    >
       <IoMdSearch
         size={25}
-        className={`absolute ml-3 mt-4 ${searchIconColor}`}
+        className={`absolute ml-3 mt-4 ${searchIconColor} ${isInteractionDisabled && "cursor-not-allowed"}`}
+        disabled={isInteractionDisabled}
       />
       <input
         type="text"
         placeholder="Search..."
-        className="mt-4 w-full rounded-full bg-gray-200 p-2 pl-12 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={`mt-4 w-full rounded-full bg-gray-200 p-2 pl-12 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isInteractionDisabled && "cursor-not-allowed"}`}
         onFocus={() => handleSearchBarTextColor("focus")}
         onBlur={() => handleSearchBarTextColor("blur")}
         onChange={handleChange}
         value={query}
+        disabled={isInteractionDisabled}
       />
     </div>
   );

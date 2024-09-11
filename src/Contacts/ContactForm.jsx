@@ -146,22 +146,15 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
   };
 
   const isFormValid = () => {
-    const validateText = (text, minLength, maxLength) =>
-      text.length >= minLength && text.length <= maxLength;
-
-    const validatePattern = (value, pattern) => new RegExp(pattern).test(value);
-
     return (
-      validateText(formData.firstName, 2, 50) &&
-      validateText(formData.lastName, 2, 50) &&
-      validateText(formData.streetName, 2, 50) &&
-      validateText(formData.houseNumber, 1, 10) &&
-      validateText(formData.apartmentNumber, 0, 10) &&
-      validatePattern(formData.postalCode, "^\\d{2}-\\d{3}$") &&
-      validateText(formData.town, 2, 50) &&
-      validatePattern(formData.phoneNumber, "^[0-9]{9}$") &&
-      formData.dateOfBirth &&
-      new Date(formData.dateOfBirth) < new Date()
+      formData.firstName &&
+      formData.lastName &&
+      formData.streetName &&
+      formData.houseNumber &&
+      formData.postalCode &&
+      formData.town &&
+      formData.phoneNumber &&
+      formData.dateOfBirth
     );
   };
 
@@ -348,9 +341,11 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               onChange={handleChange}
               className="w-full rounded-lg border p-2"
               required
-              pattern="[0-9]{9}"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
               onInvalid={(e) =>
-                e.target.setCustomValidity("Phone number is not valid.")
+                e.target.setCustomValidity(
+                  "Phone number must be in format XXX-XXX-XXX.",
+                )
               }
               onInput={(e) => e.target.setCustomValidity("")}
             />

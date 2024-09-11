@@ -8,6 +8,7 @@ import { IoIosPerson } from "react-icons/io";
 import { PiSmileySadLight } from "react-icons/pi";
 import ContactData from "./ContactData.jsx";
 import ContactDataTwo from "./ContactDataTwo.jsx";
+import Loader from "../Shared/Loader.jsx";
 
 const SelectedContact = ({
   selectedContact,
@@ -15,6 +16,7 @@ const SelectedContact = ({
   handleActionType,
   actionType,
   isConnectionError,
+  isFetching,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -69,15 +71,18 @@ const SelectedContact = ({
   if (!selectedContact) {
     return (
       <div className="h-[760px] w-2/3">
-        <p className="mt-16 text-center text-2xl">
-          {isConnectionError ? (
+        <div className="mt-16 text-center text-2xl">
+          {isConnectionError && (
             <div className="flex flex-col items-center">
               Connection error <PiSmileySadLight size={50} />
             </div>
-          ) : (
-            "Select a contact to see details"
           )}
-        </p>
+
+          {isFetching && <Loader isFetching={isFetching} />}
+          {!isConnectionError &&
+            !isFetching &&
+            "Select a contact to see details"}
+        </div>
       </div>
     );
   }
@@ -135,7 +140,7 @@ const SelectedContact = ({
         <p className="text-gray-500">{selectedContact.town}</p>
       </div>
 
-      <div className="mx-24 mt-20 flex items-center">
+      <div className="mx-24 mt-20 flex items-center justify-between">
         <ContactData selectedContact={selectedContact} />
         <ContactDataTwo selectedContact={selectedContact} />
       </div>

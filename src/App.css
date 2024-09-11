@@ -11,6 +11,7 @@ html {
   height: 90vh;
   width: 1280px;
   margin: 0 auto;
+  background-color: #1d4ed8;
 }
 
 input:focus::placeholder {

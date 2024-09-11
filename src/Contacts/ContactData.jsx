@@ -4,7 +4,7 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 
 const ContactData = ({ selectedContact }) => {
   return (
-    <div className="h-[300px] w-[220px] cursor-default">
+    <div className="h-[300px] w-[260px] cursor-default">
       <div className="flex h-32 w-full items-center justify-center rounded-2xl border border-blue-500 p-4">
         <BsFillTelephoneFill size={30} className="text-blue-500" />
         <div className="ml-4">

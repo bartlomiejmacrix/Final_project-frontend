@@ -4,19 +4,23 @@ import Contact from "./Contact";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import format from "date-fns/format";
 import AddContact from "./AddContact.jsx";
+import Loader from "../Shared/Loader.jsx";
 
 const ContactList = ({
   onContactSelect,
   selectedContact,
   handleActionType,
+  isConnectionError,
   setIsConnectionError,
+  isFetching,
+  setIsFetching,
 }) => {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
 
   useEffect(() => {
     const fetchContacts = async () => {
-      console.log("fetching...");
+      setIsFetching(true);
       try {
         const response = await fetch("https://localhost:7158/api/customer");
         if (!response.ok) {
@@ -32,10 +36,15 @@ const ContactList = ({
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
         setIsConnectionError(true);
+      } finally {
+        setIsFetching(false);
       }
     };
 
-    if (!contacts.some((contact) => contact.id === selectedContact?.id)) {
+    if (
+      !contacts.some((contact) => contact.id === selectedContact?.id) &&
+      selectedContact != "add"
+    ) {
       fetchContacts();
     }
   }, [selectedContact]);
@@ -67,24 +76,36 @@ const ContactList = ({
     setFilteredContacts(filtered);
   };
 
-  return (
-    <div className="flex h-[760px] w-1/3 flex-col border-r-2 border-r-gray-200 px-2">
-      <Search onSearch={handleSearch} />
-      <div className="scrollbar-hide overflow-y-scroll">
-        <AddContact
-          selectedContact={selectedContact}
-          handleActionType={handleActionType}
-          onContactSelect={onContactSelect}
-        />
+  const isInteractionDisabled = isConnectionError || isFetching;
 
-        {filteredContacts.map((contact) => (
-          <Contact
-            contactInfo={contact}
-            key={contact.id}
-            onClick={() => handleContactSelect(contact)}
-            isSelected={contact.id === selectedContact?.id}
-          />
-        ))}
+  return (
+    <div
+      className={`flex h-[760px] w-1/3 flex-col border-r-2 border-r-gray-200 px-2`}
+    >
+      <Search
+        onSearch={handleSearch}
+        isInteractionDisabled={isInteractionDisabled}
+      />
+      <div className="scrollbar-hide overflow-y-scroll">
+        <Loader isFetching={isFetching} />
+        {!isFetching && (
+          <>
+            <AddContact
+              selectedContact={selectedContact}
+              handleActionType={handleActionType}
+              onContactSelect={onContactSelect}
+              isInteractionDisabled={isInteractionDisabled}
+            />
+            {filteredContacts.map((contact) => (
+              <Contact
+                contactInfo={contact}
+                key={contact.id}
+                onClick={() => handleContactSelect(contact)}
+                isSelected={contact.id === selectedContact?.id}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ const ContactWrapper = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [actionType, setActionType] = useState(ContactActionTypes.NONE);
   const [isConnectionError, setIsConnectionError] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleActionType = (action) => {
     setActionType(action);
@@ -17,12 +18,15 @@ const ContactWrapper = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex rounded-b-2xl bg-white">
       <ContactList
         selectedContact={selectedContact}
         onContactSelect={handleContactSelect}
         handleActionType={handleActionType}
+        isConnectionError={isConnectionError}
         setIsConnectionError={setIsConnectionError}
+        isFetching={isFetching}
+        setIsFetching={setIsFetching}
       />
       <SelectedContact
         selectedContact={selectedContact}
@@ -30,6 +34,7 @@ const ContactWrapper = () => {
         handleActionType={handleActionType}
         actionType={actionType}
         isConnectionError={isConnectionError}
+        isFetching={isFetching}
       />
     </div>
   );
