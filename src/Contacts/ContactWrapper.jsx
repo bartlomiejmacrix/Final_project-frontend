@@ -3,7 +3,7 @@ import ContactList from "./ContactList";
 import SelectedContact from "./SelectedContact";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 
-const ContactWrapper = () => {
+const ContactWrapper = ({ handleToast }) => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [actionType, setActionType] = useState(ContactActionTypes.NONE);
   const [isConnectionError, setIsConnectionError] = useState(false);
@@ -27,6 +27,7 @@ const ContactWrapper = () => {
         setIsConnectionError={setIsConnectionError}
         isFetching={isFetching}
         setIsFetching={setIsFetching}
+        handleToast={handleToast}
       />
       <SelectedContact
         selectedContact={selectedContact}

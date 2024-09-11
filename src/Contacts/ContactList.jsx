@@ -14,9 +14,17 @@ const ContactList = ({
   setIsConnectionError,
   isFetching,
   setIsFetching,
+  handleToast,
 }) => {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
+
+  const isBirthday = (date1, date2) => {
+    return (
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -33,6 +41,16 @@ const ContactList = ({
         setContacts(sortedContacts);
         setFilteredContacts(sortedContacts);
         setIsConnectionError(false);
+
+        const today = new Date();
+        sortedContacts.forEach((contact) => {
+          const contactBirthDate = new Date(contact.dateOfBirth);
+          if (isBirthday(today, contactBirthDate)) {
+            handleToast(
+              `🎉 ${contact.firstName} ${contact.lastName} from ${contact.town} has a birthday today!`,
+            );
+          }
+        });
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
         setIsConnectionError(true);
