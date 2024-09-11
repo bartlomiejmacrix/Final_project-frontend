@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaPenAlt } from "react-icons/fa";
-import { RiDeleteBin4Fill } from "react-icons/ri";
+import React, { useState } from "react";
 import ContactForm from "./ContactForm.jsx";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import { IoIosPerson } from "react-icons/io";
@@ -9,6 +6,7 @@ import { PiSmileySadLight } from "react-icons/pi";
 import ContactData from "./ContactData.jsx";
 import ContactDataTwo from "./ContactDataTwo.jsx";
 import Loader from "../Shared/Loader.jsx";
+import ThreeDots from "../Shared/ThreeDots.jsx";
 
 const SelectedContact = ({
   selectedContact,
@@ -20,10 +18,6 @@ const SelectedContact = ({
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    setShowOptions(false);
-  }, [selectedContact]);
 
   const handleDelete = async () => {
     try {
@@ -102,37 +96,12 @@ const SelectedContact = ({
           )}
         </div>
 
-        <div
-          className="absolute right-4 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white"
-          onClick={() => setShowOptions(true)}
-          onMouseLeave={() => setShowOptions(false)}
-        >
-          <BsThreeDotsVertical size={25} />
-          {showOptions && (
-            <div
-              className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-md"
-              onClick={() => setShowOptions(true)}
-              onMouseLeave={() => setShowOptions(false)}
-            >
-              <ul className="text-black">
-                <li
-                  className="flex cursor-pointer items-center rounded-lg p-2 transition-all duration-200 hover:bg-blue-500 hover:text-white"
-                  onClick={() => handleActionType(ContactActionTypes.UPDATE)}
-                >
-                  <FaPenAlt />
-                  <p className="ml-2">Update contact</p>
-                </li>
-                <li
-                  className="flex cursor-pointer items-center rounded-lg p-2 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
-                  onClick={() => setShowModal(true)}
-                >
-                  <RiDeleteBin4Fill />
-                  <p className="ml-2">Delete contact</p>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+        <ThreeDots
+          showOptions={showOptions}
+          setShowOptions={setShowOptions}
+          handleActionType={handleActionType}
+          setShowModal={setShowModal}
+        />
 
         <h2 className="mt-2 text-2xl font-bold">
           {selectedContact.firstName} {selectedContact.lastName}

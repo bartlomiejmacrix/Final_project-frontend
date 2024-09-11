@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Search from "./Search";
+import Search from "../Shared/Search.jsx";
 import Contact from "./Contact";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import format from "date-fns/format";
 import AddContact from "./AddContact.jsx";
 import Loader from "../Shared/Loader.jsx";
+import { useCookies } from "react-cookie";
 
 const ContactList = ({
   onContactSelect,
@@ -18,6 +19,7 @@ const ContactList = ({
 }) => {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
+  const [cookies, setCookie] = useCookies(["lastShownDate"]);
 
   const isBirthday = (date1, date2) => {
     return (
@@ -43,14 +45,23 @@ const ContactList = ({
         setIsConnectionError(false);
 
         const today = new Date();
-        sortedContacts.forEach((contact) => {
-          const contactBirthDate = new Date(contact.dateOfBirth);
-          if (isBirthday(today, contactBirthDate)) {
-            handleToast(
-              `🎉 ${contact.firstName} ${contact.lastName} from ${contact.town} has a birthday today!`,
-            );
-          }
-        });
+        const todayString = today.toISOString().split("T")[0];
+        const lastShownDate = cookies.lastShownDate;
+
+        if (lastShownDate !== todayString) {
+          sortedContacts.forEach((contact) => {
+            const contactBirthDate = new Date(contact.dateOfBirth);
+            if (isBirthday(today, contactBirthDate)) {
+              handleToast(
+                `🎉 ${contact.firstName} ${contact.lastName} from ${contact.town} has a birthday today!`,
+              );
+            }
+          });
+          setCookie("lastShownDate", todayString, {
+            path: "/",
+            maxAge: 24 * 60 * 60,
+          });
+        }
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
         setIsConnectionError(true);
@@ -59,13 +70,8 @@ const ContactList = ({
       }
     };
 
-    if (
-      !contacts.some((contact) => contact.id === selectedContact?.id) &&
-      selectedContact != "add"
-    ) {
-      fetchContacts();
-    }
-  }, [selectedContact]);
+    fetchContacts();
+  }, []);
 
   const handleContactSelect = (contact) => {
     handleActionType(ContactActionTypes.NONE);
