@@ -51,11 +51,16 @@ const SelectedContact = ({
   }, [selectedContact]);
 
   const handleUpdate = (contactData) => {
+    if (!contactData) {
+      contactData = selectedContact;
+    }
+
     if (!contactData.id) {
       contactData.id = selectedContact.id;
     }
     handleActionType(ContactActionTypes.UPDATE);
     navigate("/update/customer/" + contactData.id);
+    setShowOptions(false);
   };
 
   useEffect(() => {

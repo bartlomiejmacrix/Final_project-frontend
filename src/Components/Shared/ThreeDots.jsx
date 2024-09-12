@@ -23,13 +23,16 @@ const ThreeDots = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setShowOptions]);
 
-  const dotsStyles = `absolute right-4 top-4 cursor-pointer rounded-lg p-2 text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white ${showOptions ? "text-white bg-blue-500" : ""}`;
+  const dotsStyles = `absolute right-4 top-4 cursor-pointer rounded-2xl text-blue-500 transition-all duration-200 hover:bg-blue-500 hover:text-white ${showOptions ? "text-white bg-blue-500" : ""}`;
 
   return (
-    <div ref={ref} className={dotsStyles} onClick={() => setShowOptions(true)}>
-      <BsThreeDotsVertical size={25} />
+    <div ref={ref} className={dotsStyles}>
+      <BsThreeDotsVertical
+        className="h-10 w-10 p-1"
+        onClick={() => setShowOptions(true)}
+      />
       {showOptions && (
-        <div className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-md">
+        <div className="absolute right-0 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-md">
           <ul className="text-black">
             <li
               className="flex cursor-pointer items-center rounded-lg p-2 transition-all duration-200 hover:bg-blue-500 hover:text-white"
