@@ -1,4 +1,4 @@
-# Final project - Frontend
+# Book Application - frontend
 
 This is a web application project designed to manage the frontend of the Contact Book Application. The frontend is developed using React.js + Vite with Tailwind CSS.
 
