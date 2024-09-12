@@ -1,9 +1,39 @@
-# React + Vite
+# Final project - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a web application project designed to manage the frontend of the Contact Book Application. The frontend is developed using React.js + Vite with Tailwind CSS.
 
-Currently, two official plugins are available:
+# Backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# Final_project-frontend
+You can access backend code for this project [here]([https://github.com/bartlomiejmacrix/Final_Project]).
+
+## Getting Started
+
+To run this project locally, follow these steps:
+
+1. Clone the repository to your local machine:
+
+    ```bash
+    git clone https://github.com/bartlomiejmacrix/Final_project-frontend
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd Final_project-frontend
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+4. Run the application:
+
+    ```bash
+    npm run dev
+    ```
+
+## Purpose
+
+The purpose of creating this app is to facilitate the functionality of the Contact Book Application.
