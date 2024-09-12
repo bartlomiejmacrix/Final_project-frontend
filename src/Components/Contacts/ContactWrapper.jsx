@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ContactList from "./ContactList";
 import SelectedContact from "./SelectedContact";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes";
+import NoContactModal from "../Shared/NoContactModal";
 
 const ContactWrapper = ({ handleToast }) => {
   const [selectedContact, setSelectedContact] = useState(null);
@@ -9,6 +10,7 @@ const ContactWrapper = ({ handleToast }) => {
   const [isConnectionError, setIsConnectionError] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [contacts, setContacts] = useState([]);
+  const [isContactFound, setIsContactFound] = useState(true);
 
   const handleActionType = (action) => {
     setActionType(action);
@@ -40,7 +42,11 @@ const ContactWrapper = ({ handleToast }) => {
         isConnectionError={isConnectionError}
         isFetching={isFetching}
         contacts={contacts}
+        setIsContactFound={setIsContactFound}
       />
+      {!isContactFound && (
+        <NoContactModal setIsContactFound={setIsContactFound} />
+      )}
     </div>
   );
 };

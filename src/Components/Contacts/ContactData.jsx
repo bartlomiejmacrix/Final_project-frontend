@@ -15,7 +15,7 @@ const ContactData = ({ selectedContact }) => {
       <div className="mt-24 flex h-32 items-center justify-center rounded-2xl border border-blue-500 p-4">
         <LuMapPin size={40} className="text-blue-500" />
         <div className="ml-4">
-          <p>
+          <p className="w-32 truncate">
             {selectedContact.streetName} {selectedContact.houseNumber}
             {selectedContact.apartmentNumber
               ? "/" + selectedContact.apartmentNumber

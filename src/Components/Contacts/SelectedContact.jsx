@@ -17,12 +17,14 @@ const SelectedContact = ({
   actionType,
   isConnectionError,
   isFetching,
+  setIsContactFound,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isFetchingSuccess = !isConnectionError && !isFetching;
+
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -79,6 +81,8 @@ const SelectedContact = ({
     if (!contact) {
       console.error("Contact not found");
       onContactSelect(null);
+      setIsContactFound(false);
+      navigate("/");
 
       return;
     }
@@ -157,7 +161,7 @@ const SelectedContact = ({
           handleUpdate={handleUpdate}
         />
 
-        <h2 className="mt-2 text-2xl font-bold">
+        <h2 className="mt-2 text-center text-2xl font-bold">
           {selectedContact.firstName} {selectedContact.lastName}
         </h2>
         <p className="text-gray-500">{selectedContact.town}</p>

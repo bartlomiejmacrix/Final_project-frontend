@@ -150,13 +150,13 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
 
   const isFormValid = () => {
     return (
-      formData.firstName &&
-      formData.lastName &&
-      formData.streetName &&
-      formData.houseNumber &&
-      formData.postalCode &&
-      formData.town &&
-      formData.phoneNumber &&
+      formData.firstName ||
+      formData.lastName ||
+      formData.streetName ||
+      formData.houseNumber ||
+      formData.postalCode ||
+      formData.town ||
+      formData.phoneNumber ||
       formData.dateOfBirth
     );
   };
@@ -205,7 +205,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               minLength={2}
               maxLength={50}
@@ -225,7 +225,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               minLength={2}
               maxLength={50}
@@ -245,7 +245,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="streetName"
               value={formData.streetName}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               minLength={2}
               maxLength={50}
@@ -265,7 +265,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="houseNumber"
               value={formData.houseNumber}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               minLength={1}
               maxLength={10}
@@ -285,7 +285,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="apartmentNumber"
               value={formData.apartmentNumber}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               maxLength={10}
               onInvalid={(e) =>
                 e.target.setCustomValidity(
@@ -303,7 +303,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="postalCode"
               value={formData.postalCode}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               pattern="\d{2}-\d{3}"
               onInvalid={(e) =>
@@ -322,7 +322,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="town"
               value={formData.town}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               minLength={2}
               maxLength={50}
@@ -342,7 +342,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
               onInvalid={(e) =>
@@ -361,7 +361,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
-              className="w-full rounded-lg border p-2"
+              className="w-full rounded-lg border p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               onInvalid={(e) =>
                 e.target.setCustomValidity("Date of birth must be in the past.")

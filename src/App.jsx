@@ -19,11 +19,13 @@ function App() {
     });
   };
   return (
-    <Router>
-      <Navbar />
-      <ContactWrapper handleToast={handleToast} />
-      <ToastContainer />
-    </Router>
+    <div className="w-[1280px]">
+      <Router>
+        <Navbar />
+        <ContactWrapper handleToast={handleToast} />
+        <ToastContainer />
+      </Router>
+    </div>
   );
 }
 

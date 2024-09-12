@@ -21,8 +21,8 @@ const Contact = ({ contactInfo, onClick, isSelected }) => {
         ) : (
           <IoIosPerson size={50} />
         )}
-        <div className="flex flex-col justify-center pl-4 text-sm">
-          <p className="font-bold">
+        <div className="flex w-3/4 flex-col justify-center pl-4 text-sm">
+          <p className="w-full font-bold">
             {contactInfo.firstName} {contactInfo.lastName}
           </p>
           <p className="text-gray-500">
