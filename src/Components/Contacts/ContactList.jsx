@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Search from "../Shared/Search.jsx";
-import Contact from "./Contact";
+import Contact from "./Contact.jsx";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import format from "date-fns/format";
 import AddContact from "./AddContact.jsx";
 import Loader from "../Shared/Loader.jsx";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const ContactList = ({
+  contacts,
+  setContacts,
   onContactSelect,
   selectedContact,
   handleActionType,
@@ -17,15 +20,49 @@ const ContactList = ({
   setIsFetching,
   handleToast,
 }) => {
-  const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [cookies, setCookie] = useCookies(["lastShownDate"]);
+  const navigate = useNavigate();
 
   const isBirthday = (date1, date2) => {
     return (
       date1.getMonth() === date2.getMonth() &&
       date1.getDate() === date2.getDate()
     );
+  };
+
+  const sendToastWhenBirthday = (fetchedContacts) => {
+    const today = new Date();
+    const todayString = today.toISOString().split("T")[0];
+    const lastShownDate = cookies.lastShownDate;
+
+    if (lastShownDate === todayString) {
+      return;
+    }
+
+    let wasTodayBirthday = false;
+
+    fetchedContacts.forEach((contact) => {
+      const contactBirthDate = new Date(contact.dateOfBirth);
+      if (isBirthday(today, contactBirthDate)) {
+        handleToast(
+          `🎉 ${contact.firstName} ${contact.lastName} from ${contact.town} has a birthday today!`,
+        );
+        wasTodayBirthday = true;
+      }
+    });
+    if (wasTodayBirthday) {
+      setCookie("lastShownDate", todayString, {
+        path: "/",
+        maxAge: 24 * 60 * 60,
+      });
+    }
+  };
+
+  const handleAddNewContact = () => {
+    handleActionType(ContactActionTypes.ADD);
+    onContactSelect("add");
+    navigate("/add/customer");
   };
 
   useEffect(() => {
@@ -44,23 +81,10 @@ const ContactList = ({
         setFilteredContacts(sortedContacts);
         setIsConnectionError(false);
 
-        const today = new Date();
-        const todayString = today.toISOString().split("T")[0];
-        const lastShownDate = cookies.lastShownDate;
+        sendToastWhenBirthday(sortedContacts);
 
-        if (lastShownDate !== todayString) {
-          sortedContacts.forEach((contact) => {
-            const contactBirthDate = new Date(contact.dateOfBirth);
-            if (isBirthday(today, contactBirthDate)) {
-              handleToast(
-                `🎉 ${contact.firstName} ${contact.lastName} from ${contact.town} has a birthday today!`,
-              );
-            }
-          });
-          setCookie("lastShownDate", todayString, {
-            path: "/",
-            maxAge: 24 * 60 * 60,
-          });
+        if (location.pathname === "/add/customer") {
+          handleAddNewContact();
         }
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
@@ -70,12 +94,18 @@ const ContactList = ({
       }
     };
 
-    fetchContacts();
-  }, []);
+    if (
+      !contacts.some((contact) => contact.id === selectedContact?.id) &&
+      selectedContact !== "add"
+    ) {
+      fetchContacts();
+    }
+  }, [selectedContact]);
 
   const handleContactSelect = (contact) => {
     handleActionType(ContactActionTypes.NONE);
     onContactSelect(contact);
+    navigate("/view/customer/" + contact.id);
   };
 
   const handleSearch = (query) => {
@@ -119,6 +149,7 @@ const ContactList = ({
               handleActionType={handleActionType}
               onContactSelect={onContactSelect}
               isInteractionDisabled={isInteractionDisabled}
+              handleAddNewContact={handleAddNewContact}
             />
             {filteredContacts.map((contact) => (
               <Contact

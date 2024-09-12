@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const defaultValues = {
   firstName: "",
@@ -23,6 +24,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
     ...defaultValues,
   });
   const [hasChanges, setHasChanges] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (contact) {
@@ -121,6 +123,7 @@ const ContactForm = ({ contact, onContactSelect, handleActionType }) => {
       if (response.ok) {
         onContactSelect(null);
         handleActionType(ContactActionTypes.NONE);
+        navigate("/");
       } else {
         console.error("Error saving contact:", response.statusText);
       }

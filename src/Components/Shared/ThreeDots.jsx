@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaPenAlt } from "react-icons/fa";
 import { RiDeleteBin4Fill } from "react-icons/ri";
-import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 
 const ThreeDots = ({
   showOptions,
   setShowOptions,
-  handleActionType,
   setShowModal,
+  handleUpdate,
 }) => {
   const ref = useRef(null);
 
@@ -34,7 +33,7 @@ const ThreeDots = ({
           <ul className="text-black">
             <li
               className="flex cursor-pointer items-center rounded-lg p-2 transition-all duration-200 hover:bg-blue-500 hover:text-white"
-              onClick={() => handleActionType(ContactActionTypes.UPDATE)}
+              onClick={handleUpdate}
             >
               <FaPenAlt />
               <p className="ml-2">Update contact</p>

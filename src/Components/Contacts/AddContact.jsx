@@ -1,17 +1,11 @@
 import React from "react";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 
 const AddContact = ({
   selectedContact,
-  handleActionType,
-  onContactSelect,
   isInteractionDisabled,
+  handleAddNewContact,
 }) => {
-  const handleAddNewContact = () => {
-    handleActionType(ContactActionTypes.ADD);
-    onContactSelect("add");
-  };
   return (
     <div
       className={`ml-1 flex h-[80px] ${isInteractionDisabled ? "cursor-not-allowed" : "cursor-pointer"} items-center rounded-lg p-2 transition-all duration-200 ${selectedContact === "add" ? "bg-green-200" : "hover:bg-green-100"} `}

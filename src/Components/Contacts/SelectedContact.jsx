@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContactForm from "./ContactForm.jsx";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes.js";
 import { IoIosPerson } from "react-icons/io";
@@ -7,8 +7,10 @@ import ContactData from "./ContactData.jsx";
 import ContactDataTwo from "./ContactDataTwo.jsx";
 import Loader from "../Shared/Loader.jsx";
 import ThreeDots from "../Shared/ThreeDots.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SelectedContact = ({
+  contacts,
   selectedContact,
   onContactSelect,
   handleActionType,
@@ -18,7 +20,9 @@ const SelectedContact = ({
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isFetchingSuccess = !isConnectionError && !isFetching;
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -31,6 +35,7 @@ const SelectedContact = ({
         console.log("Contact deleted successfully");
         setShowModal(false);
         onContactSelect(null);
+        navigate("/");
       } else {
         console.error("Failed to delete contact");
       }
@@ -38,6 +43,52 @@ const SelectedContact = ({
       console.error("Error while deleting contact", error);
     }
   };
+
+  useEffect(() => {
+    setShowOptions(false);
+  }, [selectedContact]);
+
+  const handleUpdate = (contactData) => {
+    if (!contactData.id) {
+      contactData.id = selectedContact.id;
+    }
+    handleActionType(ContactActionTypes.UPDATE);
+    navigate("/update/customer/" + contactData.id);
+  };
+
+  useEffect(() => {
+    if (!isFetchingSuccess) return;
+
+    const { pathname } = location;
+    const paths = {
+      update: "/update/customer/",
+      view: "/view/customer/",
+    };
+
+    const currentPath = Object.values(paths).find((path) =>
+      pathname.startsWith(path),
+    );
+
+    if (!currentPath) {
+      return;
+    }
+
+    const idFromPath = pathname.substring(currentPath.length);
+    const contact = contacts.find((contact) => contact.id === idFromPath);
+
+    if (!contact) {
+      console.error("Contact not found");
+      onContactSelect(null);
+
+      return;
+    }
+
+    onContactSelect(contact);
+
+    if (currentPath === paths.update) {
+      handleUpdate(contact);
+    }
+  }, [isFetchingSuccess]);
 
   if (actionType === ContactActionTypes.ADD) {
     return (
@@ -101,6 +152,9 @@ const SelectedContact = ({
           setShowOptions={setShowOptions}
           handleActionType={handleActionType}
           setShowModal={setShowModal}
+          selectedContact={selectedContact}
+          isFetchingSuccess={isFetchingSuccess}
+          handleUpdate={handleUpdate}
         />
 
         <h2 className="mt-2 text-2xl font-bold">

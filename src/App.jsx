@@ -1,8 +1,9 @@
 import "./App.css";
-import Navbar from "./Navbar/Navbar";
-import ContactWrapper from "./Contacts/ContactWrapper";
+import Navbar from "./Components/Navbar/Navbar";
+import ContactWrapper from "./Components/Contacts/ContactWrapper";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   const handleToast = (message) => {
@@ -18,11 +19,11 @@ function App() {
     });
   };
   return (
-    <>
+    <Router>
       <Navbar />
       <ContactWrapper handleToast={handleToast} />
       <ToastContainer />
-    </>
+    </Router>
   );
 }
 
