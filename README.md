@@ -4,7 +4,7 @@ This is a web application project designed to manage the frontend of the Contact
 
 # Backend
 
-You can access backend code for this project [here]([https://github.com/bartlomiejmacrix/Final_Project]).
+You can access backend code for this project [here](https://github.com/bartlomiejmacrix/Final_Project).
 
 ## Getting Started
 
