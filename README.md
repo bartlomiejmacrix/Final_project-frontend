@@ -28,7 +28,13 @@ To run this project locally, follow these steps:
     npm install
     ```
 
-4. Run the application:
+4. Install vite:
+
+    ```bash
+    npm install vite --save-dev
+    ```
+
+5. Run the application:
 
     ```bash
     npm run dev
