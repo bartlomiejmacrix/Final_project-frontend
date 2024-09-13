@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import Navbar from "./Components/Navbar/Navbar";
 import ContactWrapper from "./Components/Contacts/ContactWrapper";
@@ -6,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
+  const [isLookingForDuplicates, setIsLookingForDuplicates] = useState(false);
   const handleToast = (message) => {
     toast(message, {
       position: "bottom-right",
@@ -18,11 +20,23 @@ function App() {
       theme: "light",
     });
   };
+
+  const handleDuplicates = () => {
+    setIsLookingForDuplicates(
+      (prevIsLookingForDuplicates) => !prevIsLookingForDuplicates,
+    );
+  };
   return (
     <div className="w-[1280px]">
       <Router>
-        <Navbar />
-        <ContactWrapper handleToast={handleToast} />
+        <Navbar
+          isLookingForDuplicates={isLookingForDuplicates}
+          handleDuplicates={handleDuplicates}
+        />
+        <ContactWrapper
+          handleToast={handleToast}
+          isLookingForDuplicates={isLookingForDuplicates}
+        />
         <ToastContainer />
       </Router>
     </div>

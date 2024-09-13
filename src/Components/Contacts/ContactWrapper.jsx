@@ -4,7 +4,7 @@ import SelectedContact from "./SelectedContact";
 import { ContactActionTypes } from "../Helpers/ContactActionTypes";
 import NoContactModal from "../Shared/NoContactModal";
 
-const ContactWrapper = ({ handleToast }) => {
+const ContactWrapper = ({ handleToast, isLookingForDuplicates }) => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [actionType, setActionType] = useState(ContactActionTypes.NONE);
   const [isConnectionError, setIsConnectionError] = useState(false);
@@ -33,6 +33,7 @@ const ContactWrapper = ({ handleToast }) => {
         isFetching={isFetching}
         setIsFetching={setIsFetching}
         handleToast={handleToast}
+        isLookingForDuplicates={isLookingForDuplicates}
       />
       <SelectedContact
         selectedContact={selectedContact}

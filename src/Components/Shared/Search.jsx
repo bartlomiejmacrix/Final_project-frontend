@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
+import { RiSortAlphabetAsc } from "react-icons/ri";
+import { RiSortAlphabetDesc } from "react-icons/ri";
+import "../../index.css";
 
-const Search = ({ onSearch, isInteractionDisabled }) => {
+const Search = ({
+  onSearch,
+  isInteractionDisabled,
+  isSortedAsc,
+  handleSortBtn,
+  isLookingForDuplicates,
+}) => {
   const [searchIconColor, setSearchIconColor] = useState("text-gray-500");
   const [query, setQuery] = useState("");
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -11,6 +20,10 @@ const Search = ({ onSearch, isInteractionDisabled }) => {
       eventType === "focus" ? "text-blue-500" : "text-gray-500",
     );
   };
+
+  useEffect(() => {
+    setQuery("");
+  }, [isLookingForDuplicates]);
 
   // Handle search query, typingTimeout is used to debounce the search query.
   const handleChange = (e) => {
@@ -47,6 +60,23 @@ const Search = ({ onSearch, isInteractionDisabled }) => {
         value={query}
         disabled={isInteractionDisabled}
       />
+      <div className="pt-3">
+        {!isSortedAsc ? (
+          <RiSortAlphabetAsc
+            size={40}
+            className="btn"
+            onClick={handleSortBtn}
+            title="Sort alphabetically in ascending order"
+          />
+        ) : (
+          <RiSortAlphabetDesc
+            size={40}
+            className="btn"
+            onClick={handleSortBtn}
+            title="Sort alphabetically in descending order"
+          />
+        )}
+      </div>
     </div>
   );
 };

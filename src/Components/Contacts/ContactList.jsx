@@ -19,10 +19,103 @@ const ContactList = ({
   isFetching,
   setIsFetching,
   handleToast,
+  isLookingForDuplicates,
 }) => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [cookies, setCookie] = useCookies(["lastShownDate"]);
+  const [isSortedAsc, setIsSortedAsc] = useState(true);
+  const [originalContacts, setOriginalContacts] = useState([]);
+  const [currentContacts, setCurrentContacts] = useState([]);
   const navigate = useNavigate();
+
+  // For some reason extracting duplicated code to a method does provide the same result.
+  const handleSortBtn = () => {
+    var sortedFilteredContacts;
+    var sortedContacts;
+    var sortedOriginalContacts;
+    var sortedCurrentContacts;
+
+    if (!isSortedAsc) {
+      sortedFilteredContacts = filteredContacts.sort((a, b) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedContacts = contacts.sort((a, b) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedOriginalContacts = originalContacts.sort((a, b) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedCurrentContacts = currentContacts.sort((a, b) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+    } else {
+      sortedFilteredContacts = filteredContacts.sort((b, a) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedContacts = contacts.sort((b, a) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedOriginalContacts = originalContacts.sort((b, a) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+
+      sortedCurrentContacts = currentContacts.sort((b, a) =>
+        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+      );
+    }
+
+    setIsSortedAsc((prevIsSortedAsc) => !prevIsSortedAsc);
+    setFilteredContacts(sortedFilteredContacts);
+    setContacts(sortedContacts);
+    setOriginalContacts(sortedOriginalContacts);
+    setCurrentContacts(sortedCurrentContacts);
+  };
+
+  useEffect(() => {
+    if (isLookingForDuplicates) {
+      const findDuplicates = (contacts) => {
+        const seen = new Map();
+        const duplicatesSet = new Set();
+
+        contacts.forEach((contact) => {
+          const identifier = [
+            contact.firstName,
+            contact.lastName,
+            contact.streetName,
+            contact.houseNumber,
+            contact.apartmentNumber,
+            contact.postalCode,
+            contact.town,
+            contact.phoneNumber,
+            contact.dateOfBirth,
+          ]
+            .join("_")
+            .toLowerCase();
+
+          if (seen.has(identifier)) {
+            duplicatesSet.add(contact);
+            duplicatesSet.add(seen.get(identifier));
+          } else {
+            seen.set(identifier, contact);
+          }
+        });
+
+        return Array.from(duplicatesSet);
+      };
+
+      const duplicateContacts = findDuplicates(originalContacts);
+      setCurrentContacts(duplicateContacts);
+      setFilteredContacts(duplicateContacts);
+    } else {
+      setCurrentContacts(originalContacts);
+      setFilteredContacts(originalContacts);
+    }
+  }, [isLookingForDuplicates, originalContacts]);
 
   const isBirthday = (date1, date2) => {
     return (
@@ -79,6 +172,9 @@ const ContactList = ({
         );
         setContacts(sortedContacts);
         setFilteredContacts(sortedContacts);
+        setOriginalContacts(sortedContacts);
+        setCurrentContacts(sortedContacts);
+
         setIsConnectionError(false);
 
         sendToastWhenBirthday(sortedContacts);
@@ -111,7 +207,7 @@ const ContactList = ({
   const handleSearch = (query) => {
     const lowerQuery = query.toLowerCase();
 
-    const filtered = contacts.filter((contact) => {
+    const filtered = currentContacts.filter((contact) => {
       const fields = [
         contact.firstName,
         contact.lastName,
@@ -139,6 +235,9 @@ const ContactList = ({
       <Search
         onSearch={handleSearch}
         isInteractionDisabled={isInteractionDisabled}
+        isSortedAsc={isSortedAsc}
+        handleSortBtn={handleSortBtn}
+        isLookingForDuplicates={isLookingForDuplicates}
       />
       <div className="scrollbar-hide overflow-y-scroll">
         <Loader isFetching={isFetching} />
