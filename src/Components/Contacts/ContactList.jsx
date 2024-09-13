@@ -28,52 +28,21 @@ const ContactList = ({
   const [currentContacts, setCurrentContacts] = useState([]);
   const navigate = useNavigate();
 
-  // For some reason extracting duplicated code to a method does provide the same result.
   const handleSortBtn = () => {
-    var sortedFilteredContacts;
-    var sortedContacts;
-    var sortedOriginalContacts;
-    var sortedCurrentContacts;
+    const sortOrder = isSortedAsc ? -1 : 1;
 
-    if (!isSortedAsc) {
-      sortedFilteredContacts = filteredContacts.sort((a, b) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
+    const sortContactsByFirstName = (contacts) =>
+      contacts.sort(
+        (a, b) =>
+          a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()) *
+          sortOrder,
       );
-
-      sortedContacts = contacts.sort((a, b) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-
-      sortedOriginalContacts = originalContacts.sort((a, b) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-
-      sortedCurrentContacts = currentContacts.sort((a, b) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-    } else {
-      sortedFilteredContacts = filteredContacts.sort((b, a) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-
-      sortedContacts = contacts.sort((b, a) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-
-      sortedOriginalContacts = originalContacts.sort((b, a) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-
-      sortedCurrentContacts = currentContacts.sort((b, a) =>
-        a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
-      );
-    }
 
     setIsSortedAsc((prevIsSortedAsc) => !prevIsSortedAsc);
-    setFilteredContacts(sortedFilteredContacts);
-    setContacts(sortedContacts);
-    setOriginalContacts(sortedOriginalContacts);
-    setCurrentContacts(sortedCurrentContacts);
+    setFilteredContacts(sortContactsByFirstName(filteredContacts));
+    setContacts(sortContactsByFirstName(contacts));
+    setOriginalContacts(sortContactsByFirstName(originalContacts));
+    setCurrentContacts(sortContactsByFirstName(currentContacts));
   };
 
   useEffect(() => {
